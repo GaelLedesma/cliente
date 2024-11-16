@@ -10,6 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const editModal = document.getElementById("editModal");
   const closeButton = document.querySelector(".close-button");
   const editForm = document.getElementById("editForm");
+  const createForm = document.getElementById("createForm");
+  const createModal = document.getElementById("createModal");
+
+  // Botón Crear Startup y Botón Cerrar Modal de Creación
+  const createStartupBtn = document.getElementById("create-startup-btn");
+  const closeButtonCreate = document.querySelector(".close-button-create");
 
   // URLs de las rutas del backend
   const READ_STARTUP_SERVICE_URL =
@@ -18,7 +24,10 @@ document.addEventListener("DOMContentLoaded", () => {
     "https://deletestartupservice.onrender.com/api/startups/delete";
   const UPDATE_STARTUP_SERVICE_URL =
     "https://updatestartupservice.onrender.com/api/startups/update";
+  const CREATE_STARTUP_SERVICE_URL =
+    "https://createstartupservice.onrender.com/api/startups/create";
 
+  // Evento para leer Startups
   startupsLink.addEventListener("click", async (e) => {
     e.preventDefault();
     sectionTitle.textContent = "Startups";
@@ -37,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Evento para leer Technologies
   technologiesLink.addEventListener("click", async (e) => {
     e.preventDefault();
     sectionTitle.textContent = "Technologies";
@@ -92,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Función para renderizar Technologies como tarjetas (puedes implementarlo similarmente)
+  // Función para renderizar Technologies como tarjetas
   function renderTechnologies(technologies) {
     cardsContainer.innerHTML = "";
     technologies.forEach((tech) => {
@@ -142,13 +152,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (confirmDelete) {
       try {
-        const response = await fetch(DELETE_STARTUP_SERVICE_URL, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ _id: startupId }), // Asegúrate de enviar _id
-        });
+        const response = await fetch(
+          `${DELETE_STARTUP_SERVICE_URL}/${startupId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ _id: startupId }), // Asegúrate de enviar _id
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Error al eliminar la startup");
@@ -202,13 +215,13 @@ document.addEventListener("DOMContentLoaded", () => {
     editModal.style.display = "block";
   }
 
-  // Cerrar el modal al hacer clic en la "X"
+  // Cerrar el modal al hacer clic en la "X" del Editar
   closeButton.addEventListener("click", () => {
     editModal.style.display = "none";
     editForm.reset();
   });
 
-  // Cerrar el modal al hacer clic fuera del contenido del modal
+  // Cerrar el modal al hacer clic fuera del contenido del modal de Editar
   window.addEventListener("click", (event) => {
     if (event.target == editModal) {
       editModal.style.display = "none";
@@ -265,6 +278,80 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error(error);
       alert("Hubo un error al actualizar la startup.");
+    }
+  });
+
+  // Abrir el modal de Crear Startup al hacer clic en el botón
+  createStartupBtn.addEventListener("click", () => {
+    createModal.style.display = "block";
+  });
+
+  // Cerrar el modal de Crear Startup al hacer clic en la "X"
+  closeButtonCreate.addEventListener("click", () => {
+    createModal.style.display = "none";
+    createForm.reset();
+  });
+
+  // Cerrar el modal de Crear Startup al hacer clic fuera del contenido del modal
+  window.addEventListener("click", (event) => {
+    if (event.target == createModal) {
+      createModal.style.display = "none";
+      createForm.reset();
+    }
+  });
+
+  // Manejar la sumisión del formulario de creación
+  createForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const nombre = createForm.nombre.value.trim();
+    const ubicacion = createForm.ubicacion.value.trim();
+    const categoria = createForm.categoria.value.trim();
+    const inversionRecibida = parseFloat(createForm.inversionRecibida.value);
+    const fechaFundacion = createForm.fechaFundacion.value;
+
+    // Validaciones básicas
+    if (
+      !nombre ||
+      !ubicacion ||
+      !categoria ||
+      isNaN(inversionRecibida) ||
+      !fechaFundacion
+    ) {
+      alert("Por favor, completa todos los campos correctamente.");
+      return;
+    }
+
+    const newStartup = {
+      nombre,
+      ubicacion,
+      categoria,
+      inversionRecibida,
+      fechaFundacion,
+    };
+
+    try {
+      const response = await fetch(CREATE_STARTUP_SERVICE_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newStartup),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al crear la startup");
+      }
+
+      const result = await response.json();
+      alert("Startup creada correctamente.");
+      // Cerrar el modal y recargar las startups
+      createModal.style.display = "none";
+      createForm.reset();
+      startupsLink.click();
+    } catch (error) {
+      console.error(error);
+      alert("Hubo un error al crear la startup.");
     }
   });
 });

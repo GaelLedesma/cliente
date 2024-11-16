@@ -17,6 +17,10 @@
 
     <div class="main-content">
       <h1 id="section-title">Bienvenido al Dashboard</h1>
+
+      <!-- Botón Crear Startup -->
+      <button id="create-startup-btn" class="create-btn">Crear Startup</button>
+
       <div id="cards-container" class="cards-container">
         <!-- Las tarjetas se insertarán aquí -->
       </div>
@@ -48,6 +52,42 @@
           <input type="hidden" id="startupId" name="startupId" />
 
           <button type="submit">Guardar Cambios</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal para Crear Startup -->
+    <div id="createModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button-create">&times;</span>
+        <h2>Crear Nueva Startup</h2>
+        <form id="createForm">
+          <label for="create-nombre">Nombre:</label>
+          <input type="text" id="create-nombre" name="nombre" required />
+
+          <label for="create-ubicacion">Ubicación:</label>
+          <input type="text" id="create-ubicacion" name="ubicacion" required />
+
+          <label for="create-categoria">Categoría:</label>
+          <input type="text" id="create-categoria" name="categoria" required />
+
+          <label for="create-inversionRecibida">Inversión Recibida:</label>
+          <input
+            type="number"
+            id="create-inversionRecibida"
+            name="inversionRecibida"
+            required
+          />
+
+          <label for="create-fechaFundacion">Fecha de Fundación:</label>
+          <input
+            type="date"
+            id="create-fechaFundacion"
+            name="fechaFundacion"
+            required
+          />
+
+          <button type="submit">Crear Startup</button>
         </form>
       </div>
     </div>
