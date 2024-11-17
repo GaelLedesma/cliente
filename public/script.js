@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <h3>${tech.nombre}</h3>
         <p><strong>Sector:</strong> ${tech.sector}</p>
         <p><strong>Descripción:</strong> ${tech.descripcion}</p>
-        <p><strong>Estado de Adopción:</strong> ${tech.estadoAdopcion}</p>
+        <p><strong>Estado de Adopción:</strong> ${tech.nivelAdopcion}</p>
         <p><strong>Fecha de Introducción:</strong> ${formatDate(
           tech.fechaIntroduccion
         )}</p>
