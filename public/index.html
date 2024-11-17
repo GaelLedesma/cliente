@@ -1,4 +1,3 @@
-<!-- public/index.html -->
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -15,22 +14,84 @@
       </ul>
       <p>
         Las peticiones pueden tardar mucho (10seg promedio) la primera vez que
-        se ejecutan
+        se ejecutan.
+      </p>
+      <p>
+        Si el tiempo fue largo prueba recargando la pagina y repitiendo la
+        solicitud y en la mayoria de los casos se logra más rapido.
       </p>
     </div>
 
     <div class="main-content">
       <h1 id="section-title">Bienvenido al Dashboard</h1>
 
-      <!-- Botón Crear Startup -->
+      <!-- Formulario de Filtros para Startups -->
+      <form id="filterForm">
+        <h3>Filtros de Búsqueda</h3>
 
+        <label for="filter-nombre">Nombre:</label>
+        <input
+          type="text"
+          id="filter-nombre"
+          name="nombre"
+          placeholder="Buscar por nombre"
+        />
+        <br />
+
+        <label for="filter-categoria">Categoría:</label>
+        <input
+          type="text"
+          id="filter-categoria"
+          name="categoria"
+          placeholder="Buscar por categoría"
+        />
+        <br />
+
+        <label for="filter-ubicacion">Ubicación:</label>
+        <input
+          type="text"
+          id="filter-ubicacion"
+          name="ubicacion"
+          placeholder="Buscar por ubicación"
+        />
+        <br />
+
+        <button type="submit">Buscar</button>
+        <button type="button" id="clearFilters">Limpiar Filtros</button>
+      </form>
+
+      <form id="filterFormTech" style="display: none">
+        <h3>Filtros de Búsqueda - Technologies</h3>
+
+        <label for="filterTech-categoria">Categoría:</label>
+        <input
+          type="text"
+          id="filterTech-categoria"
+          name="categoria"
+          placeholder="Buscar por categoría"
+        />
+        <br />
+
+        <label for="filterTech-estadoAdopcion">Estado de Adopción:</label>
+        <select id="filterTech-estadoAdopcion" name="estadoAdopcion">
+          <option value="" selected>Seleccione un estado</option>
+          <option value="alta">Alta</option>
+          <option value="media">Media</option>
+          <option value="baja">Baja</option>
+        </select>
+        <br />
+
+        <button type="submit">Buscar</button>
+        <button type="button" id="clearFiltersTech">Limpiar Filtros</button>
+      </form>
+
+      <!-- Botones Crear Startups y Technologies -->
       <button id="create-startup-btn" class="create-btn">Crear Startup</button>
       <button id="create-technology-btn" class="create-btn">
         Crear Technology
       </button>
-      <div id="cards-container" class="cards-container">
-        <!-- Las tarjetas se insertarán aquí -->
-      </div>
+
+      <div id="cards-container" class="cards-container"></div>
     </div>
 
     <!-- Modal para Editar Startup -->
@@ -98,6 +159,7 @@
         </form>
       </div>
     </div>
+
     <!-- Modal para Editar Technology -->
     <div id="editTechModal" class="modal">
       <div class="modal-content">
@@ -186,7 +248,7 @@
         </form>
       </div>
     </div>
+
     <script src="script.js"></script>
-    <script src="technologies.js"></script>
   </body>
 </html>

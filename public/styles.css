@@ -238,3 +238,35 @@ body {
   flex-direction: column;
   gap: 5px;
 }
+#filterForm,
+#filterFormTech {
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#filterForm h3,
+#filterFormTech h3 {
+  margin-top: 0;
+}
+
+#filterForm label,
+#filterFormTech label {
+  display: inline-block;
+  width: 100px;
+  margin-right: 10px;
+}
+
+#filterForm input,
+#filterFormTech input {
+  margin-bottom: 10px;
+  padding: 5px;
+  width: 200px;
+}
+
+#filterForm button,
+#filterFormTech button {
+  padding: 5px 10px;
+  margin-right: 5px;
+}
