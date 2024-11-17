@@ -13,14 +13,21 @@
         <li><a href="#" id="startups-link">Startups</a></li>
         <li><a href="#" id="technologies-link">Technologies</a></li>
       </ul>
+      <p>
+        Las peticiones pueden tardar mucho (10seg promedio) la primera vez que
+        se ejecutan
+      </p>
     </div>
 
     <div class="main-content">
       <h1 id="section-title">Bienvenido al Dashboard</h1>
 
       <!-- Botón Crear Startup -->
-      <button id="create-startup-btn" class="create-btn">Crear Startup</button>
 
+      <button id="create-startup-btn" class="create-btn">Crear Startup</button>
+      <button id="create-technology-btn" class="create-btn">
+        Crear Technology
+      </button>
       <div id="cards-container" class="cards-container">
         <!-- Las tarjetas se insertarán aquí -->
       </div>
@@ -91,7 +98,95 @@
         </form>
       </div>
     </div>
+    <!-- Modal para Editar Technology -->
+    <div id="editTechModal" class="modal">
+      <div class="modal-content">
+        <span class="close-tech-edit-button">&times;</span>
+        <h2>Editar Technology</h2>
+        <form id="techEditForm">
+          <label for="tech-nombre">Nombre:</label>
+          <input type="text" id="tech-nombre" name="nombre" required />
 
+          <label for="tech-sector">Sector:</label>
+          <input type="text" id="tech-sector" name="sector" required />
+
+          <label for="tech-descripcion">Descripción:</label>
+          <input
+            type="text"
+            id="tech-descripcion"
+            name="descripcion"
+            required
+          />
+
+          <label for="tech-categoria">Categoría:</label>
+          <input type="text" id="tech-categoria" name="categoria" required />
+
+          <label for="tech-nivelAdopcion">Nivel de Adopción:</label>
+          <select id="tech-nivelAdopcion" name="nivelAdopcion" required>
+            <option value="" disabled selected>Selecciona un nivel</option>
+            <option value="alta">Alta</option>
+            <option value="media">Media</option>
+            <option value="baja">Baja</option>
+          </select>
+
+          <input type="hidden" id="techId" name="techId" />
+
+          <button type="submit">Guardar Cambios</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal para Crear Technology -->
+    <div id="createTechModal" class="modal">
+      <div class="modal-content">
+        <span class="close-tech-create-button">&times;</span>
+        <h2>Crear Nueva Technology</h2>
+        <form id="techCreateForm">
+          <label for="tech-create-nombre">Nombre:</label>
+          <input type="text" id="tech-create-nombre" name="nombre" required />
+
+          <label for="tech-create-sector">Sector:</label>
+          <input type="text" id="tech-create-sector" name="sector" required />
+
+          <label for="tech-create-descripcion">Descripción:</label>
+          <input
+            type="text"
+            id="tech-create-descripcion"
+            name="descripcion"
+            required
+          />
+
+          <label for="tech-create-categoria">Categoría:</label>
+          <input
+            type="text"
+            id="tech-create-categoria"
+            name="categoria"
+            required
+          />
+
+          <label for="tech-create-nivelAdopcion">Nivel de Adopción:</label>
+          <select id="tech-create-nivelAdopcion" name="nivelAdopcion" required>
+            <option value="" disabled selected>Selecciona un nivel</option>
+            <option value="alta">Alta</option>
+            <option value="media">Media</option>
+            <option value="baja">Baja</option>
+          </select>
+
+          <label for="tech-create-fechaIntroduccion"
+            >Fecha de Introducción:</label
+          >
+          <input
+            type="date"
+            id="tech-create-fechaIntroduccion"
+            name="fechaIntroduccion"
+            required
+          />
+
+          <button type="submit">Crear Technology</button>
+        </form>
+      </div>
+    </div>
     <script src="script.js"></script>
+    <script src="technologies.js"></script>
   </body>
 </html>

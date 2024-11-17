@@ -227,3 +227,14 @@ body {
   color: black;
   text-decoration: none;
 }
+#create-technology-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 40px;
+}
+#create-startup-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}

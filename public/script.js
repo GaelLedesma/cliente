@@ -2,7 +2,6 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   const startupsLink = document.getElementById("startups-link");
-  const technologiesLink = document.getElementById("technologies-link");
   const cardsContainer = document.getElementById("cards-container");
   const sectionTitle = document.getElementById("section-title");
 
@@ -46,26 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Evento para leer Technologies
-  technologiesLink.addEventListener("click", async (e) => {
-    e.preventDefault();
-    sectionTitle.textContent = "Technologies";
-    cardsContainer.innerHTML = "<p>Cargando...</p>";
-
-    try {
-      // Implementa la lógica similar para Technologies cuando lo necesites
-      const response = await fetch("/api/technologies");
-      if (!response.ok) {
-        throw new Error("Error al obtener las technologies");
-      }
-      const data = await response.json();
-      renderTechnologies(data);
-    } catch (error) {
-      console.error(error);
-      cardsContainer.innerHTML = "<p>Error al cargar las technologies.</p>";
-    }
-  });
-
   // Función para renderizar Startups como tarjetas
   function renderStartups(startups) {
     cardsContainer.innerHTML = "";
@@ -86,40 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="buttons">
           <button class="edit-btn" data-id="${startup._id}">Editar</button>
           <button class="delete-btn" data-id="${startup._id}">Eliminar</button>
-        </div>
-      `;
-
-      cardsContainer.appendChild(card);
-    });
-
-    // Añadir eventos a los botones de eliminar y editar
-    document.querySelectorAll(".delete-btn").forEach((button) => {
-      button.addEventListener("click", handleDelete);
-    });
-
-    document.querySelectorAll(".edit-btn").forEach((button) => {
-      button.addEventListener("click", handleEdit);
-    });
-  }
-
-  // Función para renderizar Technologies como tarjetas
-  function renderTechnologies(technologies) {
-    cardsContainer.innerHTML = "";
-    technologies.forEach((tech) => {
-      const card = document.createElement("div");
-      card.classList.add("card");
-
-      card.innerHTML = `
-        <h3>${tech.nombre}</h3>
-        <p><strong>Sector:</strong> ${tech.sector}</p>
-        <p><strong>Descripción:</strong> ${tech.descripcion}</p>
-        <p><strong>Estado de Adopción:</strong> ${tech.estadoAdopcion}</p>
-        <p><strong>Fecha de Introducción:</strong> ${formatDate(
-          tech.fechaIntroduccion
-        )}</p>
-        <div class="buttons">
-          <button class="edit-btn" data-id="${tech._id}">Editar</button>
-          <button class="delete-btn" data-id="${tech._id}">Eliminar</button>
         </div>
       `;
 
