@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // URLs de las rutas del backend
   const READ_STARTUP_SERVICE_URL =
-    "https://readstartupservice.onrender.com/api/startups/read";
+    "https://cliente-eta.vercel.app/api/startups/read";
   const READ_TECHNOLOGY_SERVICE_URL =
     "https://readtechnologiesservice.onrender.com/api/technologies/read";
   const DELETE_STARTUP_SERVICE_URL =
