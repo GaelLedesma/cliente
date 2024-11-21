@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("Error al obtener las technologies");
       }
       const data = await response.json();
-      renderTechnologies(data.technologies);
+      renderTechnologies(data);
     } catch (error) {
       console.error(error);
       cardsContainer.innerHTML = "<p>Error al cargar las technologies.</p>";
