@@ -23,21 +23,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // URLs de las rutas del backend
   const READ_STARTUP_SERVICE_URL =
-    "https://cliente-eta.vercel.app/api/startups/read";
+    "https://reto-ciid-desarrollo.vercel.app/api/startups/read";
   const READ_TECHNOLOGY_SERVICE_URL =
-    "https://readtechnologiesservice.onrender.com/api/technologies/read";
+    "https://reto-ciid-desarrollo-szx1.vercel.app/api/technologies/read";
   const DELETE_STARTUP_SERVICE_URL =
-    "https://deletestartupservice.onrender.com/api/startups/delete";
+    "https://reto-ciid-desarrollo-axb7.vercel.app/api/startups/delete";
   const DELETE_TECH_SERVICE_URL =
-    "https://deletetechnologyservice.onrender.com/api/technologies/delete";
+    "https://reto-ciid-desarrollo-2rr7.vercel.app/api/technologies/delete";
   const UPDATE_STARTUP_SERVICE_URL =
-    "https://updatestartupservice.onrender.com/api/startups/update";
+    "https://reto-ciid-desarrollo-szyb.vercel.app/api/startups/update";
   const UPDATE_TECH_SERVICE_URL =
-    "https://updatetechnologyservice.onrender.com/api/technologies/update";
+    "https://reto-ciid-desarrollo-48h4.vercel.app/api/technologies/update";
   const CREATE_STARTUP_SERVICE_URL =
-    "https://createstartupservice.onrender.com/api/startups/create";
+    "https://reto-ciid-desarrollo-cj2v.vercel.app/api/startups/create";
   const CREATE_TECH_SERVICE_URL =
-    "https://createtechnologyservice.onrender.com/api/technologies/create";
+    "https://reto-ciid-desarrollo-pbr3.vercel.app/api/technologies/create";
 
   function buildQueryString(filters) {
     const query = new URLSearchParams();
