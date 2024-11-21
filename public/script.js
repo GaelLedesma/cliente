@@ -23,21 +23,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // URLs de las rutas del backend
   const READ_STARTUP_SERVICE_URL =
-    "https://reto-ciid-desarrollo.vercel.app/api/startups/read";
+    "https://api-gateway-swart.vercel.app/api/startups/read";
   const READ_TECHNOLOGY_SERVICE_URL =
-    "https://reto-ciid-desarrollo-szx1.vercel.app/api/technologies/read";
+    "https://api-gateway-swart.vercel.app/api/technologies/read";
   const DELETE_STARTUP_SERVICE_URL =
-    "https://reto-ciid-desarrollo-axb7.vercel.app/api/startups/delete";
+    "https://api-gateway-swart.vercel.app/api/startups/delete";
   const DELETE_TECH_SERVICE_URL =
-    "https://reto-ciid-desarrollo-2rr7.vercel.app/api/technologies/delete";
+    "https://api-gateway-swart.vercel.app/api/technologies/delete";
   const UPDATE_STARTUP_SERVICE_URL =
-    "https://reto-ciid-desarrollo-szyb.vercel.app/api/startups/update";
+    "https://api-gateway-swart.vercel.app/api/startups/update";
   const UPDATE_TECH_SERVICE_URL =
-    "https://reto-ciid-desarrollo-48h4.vercel.app/api/technologies/update";
+    "https://api-gateway-swart.vercel.app/api/technologies/update";
   const CREATE_STARTUP_SERVICE_URL =
-    "https://reto-ciid-desarrollo-cj2v.vercel.app/api/startups/create";
+    "https://api-gateway-swart.vercel.app/api/startups/create";
   const CREATE_TECH_SERVICE_URL =
-    "https://reto-ciid-desarrollo-pbr3.vercel.app/api/technologies/create";
+    "https://api-gateway-swart.vercel.app/api/technologies/create";
 
   function buildQueryString(filters) {
     const query = new URLSearchParams();
@@ -469,7 +469,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cardsContainer.innerHTML = "<p>Cargando...</p>";
 
     const queryString = buildQueryStringTech(filters);
-    const url = `https://reto-ciid-desarrollo-szx1.vercel.app/api/technologies/read${queryString}`;
+    const url = `https://api-gateway-swart.vercel.app/api/technologies/read${queryString}`;
 
     try {
       const response = await fetch(url);
