@@ -469,7 +469,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cardsContainer.innerHTML = "<p>Cargando...</p>";
 
     const queryString = buildQueryStringTech(filters);
-    const url = `https://readtechnologiesservice.onrender.com/api/technologies/read${queryString}`;
+    const url = `https://reto-ciid-desarrollo-szx1.vercel.app/api/technologies/read${queryString}`;
 
     try {
       const response = await fetch(url);
