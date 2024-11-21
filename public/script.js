@@ -477,7 +477,7 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("Error al obtener las technologies con filtros");
       }
       const data = await response.json();
-      renderTechnologies(data.technologies);
+      renderTechnologies(data);
     } catch (error) {
       console.error(error);
       cardsContainer.innerHTML =
