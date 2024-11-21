@@ -91,11 +91,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderTechnologies(technologies) {
     cardsContainer.innerHTML = "";
-    if (technologies.length === 0) {
-      cardsContainer.innerHTML =
-        "<p>No se encontraron technologies con los filtros aplicados.</p>";
-      return;
-    }
+    // if (technologies.length === 0) {
+    //   cardsContainer.innerHTML =
+    //     "<p>No se encontraron technologies con los filtros aplicados.</p>";
+    //   return;
+    // }
     technologies.forEach((tech) => {
       const card = document.createElement("div");
       card.classList.add("card");
