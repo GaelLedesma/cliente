@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <h3>${item.nombre}</h3>
           <p><strong>Sector:</strong> ${item.sector}</p>
           <p><strong>Descripción:</strong> ${item.descripcion}</p>
-          <p><strong>Estado de Adopción:</strong> ${item.estadoAdopcion}</p>
+          <p><strong>Estado de Adopción:</strong> ${item.nivelAdopcion}</p>
           <p><strong>Fecha de Introducción:</strong> ${formatDate(
             item.fechaIntroduccion
           )}</p>
@@ -210,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
             type.charAt(0).toUpperCase() + type.slice(1)
           } eliminada correctamente.`
         );
-        type === "startup" ? startupsLink.click() : technologiesLink.click();
+        type === "startups" ? startupsLink.click() : technologiesLink.click();
       } catch (error) {
         console.error(error);
         alert(`Hubo un error al eliminar el/la ${type}.`);
@@ -221,7 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function handleEdit(e) {
     const id = e.target.getAttribute("data-id");
     const type = e.target.getAttribute("data-type");
-    if (type === "startup") {
+    if (type === "startups") {
       openEditStartupModal(id);
     } else {
       openEditTechnologyModal(id);
