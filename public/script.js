@@ -5,77 +5,89 @@ document.addEventListener("DOMContentLoaded", () => {
   const sectionTitle = document.getElementById("section-title");
 
   const filterForm = document.getElementById("filterForm");
-  const clearFiltersButton = document.getElementById("clearFilters");
-  const filterNombre = document.getElementById("filter-nombre");
-  const filterCategoria = document.getElementById("filter-categoria");
-  const filterUbicacion = document.getElementById("filter-ubicacion");
-
   const filterFormTech = document.getElementById("filterFormTech");
+  const clearFiltersButton = document.getElementById("clearFilters");
   const clearFiltersTechButton = document.getElementById("clearFiltersTech");
-  const filterTechCategoria = document.getElementById("filterTech-categoria");
-  const filterTechEstadoAdopcion = document.getElementById(
-    "filterTech-estadoAdopcion"
-  );
 
-  // Variables para almacenar los filtros
+  const createStartupBtn = document.getElementById("create-startup-btn");
+  const createTechnologyBtn = document.getElementById("create-technology-btn");
+
   let currentFilters = {};
   let currentFiltersTech = {};
 
-  // URLs de las rutas del backend
-  const READ_STARTUP_SERVICE_URL =
-    "https://api-gateway-swart.vercel.app/api/startups/read";
-  const READ_TECHNOLOGY_SERVICE_URL =
-    "https://api-gateway-swart.vercel.app/api/technologies/read";
-  const DELETE_STARTUP_SERVICE_URL =
-    "https://api-gateway-swart.vercel.app/api/startups/delete";
-  const DELETE_TECH_SERVICE_URL =
-    "https://api-gateway-swart.vercel.app/api/technologies/delete";
-  const UPDATE_STARTUP_SERVICE_URL =
-    "https://api-gateway-swart.vercel.app/api/startups/update";
-  const UPDATE_TECH_SERVICE_URL =
-    "https://api-gateway-swart.vercel.app/api/technologies/update";
-  const CREATE_STARTUP_SERVICE_URL =
-    "https://api-gateway-swart.vercel.app/api/startups/create";
-  const CREATE_TECH_SERVICE_URL =
-    "https://api-gateway-swart.vercel.app/api/technologies/create";
+  const API_BASE_URL = "https://api-gateway-swart.vercel.app/api";
+  const SERVICES = {
+    startups: {
+      read: `${API_BASE_URL}/startups/read`,
+      create: `${API_BASE_URL}/startups/create`,
+      update: `${API_BASE_URL}/startups/update`,
+      delete: `${API_BASE_URL}/startups/delete`,
+    },
+    technologies: {
+      read: `${API_BASE_URL}/technologies/read`,
+      create: `${API_BASE_URL}/technologies/create`,
+      update: `${API_BASE_URL}/technologies/update`,
+      delete: `${API_BASE_URL}/technologies/delete`,
+    },
+  };
 
   function buildQueryString(filters) {
     const query = new URLSearchParams();
-    if (filters.nombre) query.append("nombre", filters.nombre);
-    if (filters.categoria) query.append("categoria", filters.categoria);
-    if (filters.ubicacion) query.append("ubicacion", filters.ubicacion);
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) query.append(key, value);
+    });
     return query.toString() ? `?${query.toString()}` : "";
   }
 
-  function buildQueryStringTech(filters) {
-    const query = new URLSearchParams();
-    if (filters.categoria) query.append("categoria", filters.categoria);
-    if (filters.estadoAdopcion)
-      query.append("estadoAdopcion", filters.estadoAdopcion);
-    return query.toString() ? `?${query.toString()}` : "";
-  }
-
-  function renderStartups(startups) {
+  function renderItems(items, type) {
     cardsContainer.innerHTML = "";
-    startups.forEach((startup) => {
+    if (items.length === 0) {
+      cardsContainer.innerHTML = `<p>No se encontraron ${type} con los filtros aplicados.</p>`;
+      return;
+    }
+
+    items.forEach((item) => {
       const card = document.createElement("div");
       card.classList.add("card");
 
-      card.innerHTML = `
-        <h3>${startup.nombre}</h3>
-        <p><strong>Fecha de Fundación:</strong> ${formatDate(
-          startup.fechaFundacion
-        )}</p>
-        <p><strong>Ubicación:</strong> ${startup.ubicacion}</p>
-        <p><strong>Categoría:</strong> ${startup.categoria}</p>
-        <p><strong>Inversión Recibida:</strong> $${
-          startup.inversionRecibida
-        }</p>
-        <div class="buttons">
-          <button class="edit-btn" data-id="${startup._id}">Editar</button>
-          <button class="delete-btn" data-id="${startup._id}">Eliminar</button>
-        </div>
-      `;
+      if (type === "startups") {
+        card.innerHTML = `
+          <h3>${item.nombre}</h3>
+          <p><strong>Fecha de Fundación:</strong> ${formatDate(
+            item.fechaFundacion
+          )}</p>
+          <p><strong>Ubicación:</strong> ${item.ubicacion}</p>
+          <p><strong>Categoría:</strong> ${item.categoria}</p>
+          <p><strong>Inversión Recibida:</strong> $${item.inversionRecibida}</p>
+          <div class="buttons">
+            <button class="edit-btn" data-id="${
+              item._id
+            }" data-type="startup">Editar</button>
+            <button class="delete-btn" data-id="${
+              item._id
+            }" data-type="startup">Eliminar</button>
+          </div>
+        `;
+      } else if (type === "technologies") {
+        card.innerHTML = `
+          <h3>${item.nombre}</h3>
+          <p><strong>Sector:</strong> ${item.sector}</p>
+          <p><strong>Descripción:</strong> ${item.descripcion}</p>
+          <p><strong>Estado de Adopción:</strong> ${item.nivelAdopcion}</p>
+          <p><strong>Fecha de Introducción:</strong> ${formatDate(
+            item.fechaIntroduccion
+          )}</p>
+          <p><strong>Categoría:</strong> ${item.categoria}</p>
+          <div class="buttons">
+            <button class="edit-btn" data-id="${
+              item._id
+            }" data-type="technology">Editar</button>
+            <button class="delete-btn" data-id="${
+              item._id
+            }" data-type="technology">Eliminar</button>
+          </div>
+        `;
+      }
 
       cardsContainer.appendChild(card);
     });
@@ -89,209 +101,138 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function renderTechnologies(technologies) {
-    cardsContainer.innerHTML = "";
-    // if (technologies.length === 0) {
-    //   cardsContainer.innerHTML =
-    //     "<p>No se encontraron technologies con los filtros aplicados.</p>";
-    //   return;
-    // }
-    technologies.forEach((tech) => {
-      const card = document.createElement("div");
-      card.classList.add("card");
-
-      card.innerHTML = `
-        <h3>${tech.nombre}</h3>
-        <p><strong>Sector:</strong> ${tech.sector}</p>
-        <p><strong>Descripción:</strong> ${tech.descripcion}</p>
-        <p><strong>Estado de Adopción:</strong> ${tech.nivelAdopcion}</p>
-        <p><strong>Fecha de Introducción:</strong> ${formatDate(
-          tech.fechaIntroduccion
-        )}</p>
-        <p><strong>Categoría:</strong> ${tech.categoria}</p>
-        <div class="buttons">
-          <button class="edit-btn" data-id="${tech._id}">Editar</button>
-          <button class="delete-btn" data-id="${tech._id}">Eliminar</button>
-        </div>
-      `;
-
-      cardsContainer.appendChild(card);
-    });
-
-    document.querySelectorAll(".delete-btn").forEach((button) => {
-      button.addEventListener("click", handleDeleteTech);
-    });
-
-    document.querySelectorAll(".edit-btn").forEach((button) => {
-      button.addEventListener("click", handleEditTech);
-    });
-  }
-
   function formatDate(dateString) {
     const date = new Date(dateString);
     if (isNaN(date)) return "Fecha inválida";
     return date.toLocaleDateString();
   }
 
-  function showStartupFilters() {
+  function showStartupSection() {
     filterForm.style.display = "block";
     filterFormTech.style.display = "none";
+    createStartupBtn.style.display = "block";
+    createTechnologyBtn.style.display = "none";
   }
 
-  function showTechnologiesFilters() {
+  function showTechnologiesSection() {
     filterForm.style.display = "none";
     filterFormTech.style.display = "block";
+    createStartupBtn.style.display = "none";
+    createTechnologyBtn.style.display = "block";
   }
 
-  startupsLink.addEventListener("click", async (e) => {
-    e.preventDefault();
-    sectionTitle.textContent = "Startups";
+  async function fetchItems(type, filters = {}) {
+    sectionTitle.textContent = `${
+      type.charAt(0).toUpperCase() + type.slice(1)
+    }`;
     cardsContainer.innerHTML = "<p>Cargando...</p>";
 
-    showStartupFilters();
+    const queryString = buildQueryString(filters);
+    const url = SERVICES[type].read;
 
     try {
-      const response = await fetch(READ_STARTUP_SERVICE_URL);
-      if (!response.ok) {
-        throw new Error("Error al obtener las startups");
-      }
+      const response = await fetch(`${url}${queryString}`);
+      if (!response.ok) throw new Error(`Error al obtener las ${type}`);
       const data = await response.json();
-      renderStartups(data);
+      renderItems(data, type);
     } catch (error) {
       console.error(error);
-      cardsContainer.innerHTML = "<p>Error al cargar las startups.</p>";
+      cardsContainer.innerHTML = `<p>Error al cargar las ${type}.</p>`;
     }
+  }
+
+  startupsLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    showStartupSection();
+    fetchItems("startups");
   });
 
-  technologiesLink.addEventListener("click", async (e) => {
+  technologiesLink.addEventListener("click", (e) => {
     e.preventDefault();
-    sectionTitle.textContent = "Technologies";
-    cardsContainer.innerHTML = "<p>Cargando...</p>";
-
-    showTechnologiesFilters();
-
-    try {
-      const response = await fetch(READ_TECHNOLOGY_SERVICE_URL);
-      if (!response.ok) {
-        throw new Error("Error al obtener las technologies");
-      }
-      const data = await response.json();
-      renderTechnologies(data);
-    } catch (error) {
-      console.error(error);
-      cardsContainer.innerHTML = "<p>Error al cargar las technologies.</p>";
-    }
+    showTechnologiesSection();
+    fetchItems("technologies");
   });
 
   filterForm.addEventListener("submit", (e) => {
     e.preventDefault();
+    const nombre = document.getElementById("filter-nombre").value.trim();
+    const categoria = document.getElementById("filter-categoria").value.trim();
+    const ubicacion = document.getElementById("filter-ubicacion").value.trim();
 
-    const nombre = filterNombre.value.trim();
-    const categoria = filterCategoria.value.trim();
-    const ubicacion = filterUbicacion.value.trim();
-
-    currentFilters = {
-      nombre: nombre || undefined,
-      categoria: categoria || undefined,
-      ubicacion: ubicacion || undefined,
-    };
-
-    fetchStartupsWithFilters(currentFilters);
+    currentFilters = { nombre, categoria, ubicacion };
+    fetchItems("startups", currentFilters);
   });
-
-  async function fetchStartupsWithFilters(filters = {}) {
-    sectionTitle.textContent = "Startups - Filtro Aplicado";
-    cardsContainer.innerHTML = "<p>Cargando...</p>";
-
-    const queryString = buildQueryString(filters);
-    const url = `${READ_STARTUP_SERVICE_URL}${queryString}`;
-
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Error al obtener las startups con filtros");
-      }
-      const data = await response.json();
-      renderStartups(data);
-    } catch (error) {
-      console.error(error);
-      cardsContainer.innerHTML =
-        "<p>Error al cargar las startups con los filtros aplicados.</p>";
-    }
-  }
 
   clearFiltersButton.addEventListener("click", () => {
     filterForm.reset();
-
     currentFilters = {};
-
-    sectionTitle.textContent = "Startups";
-
     startupsLink.click();
   });
 
   filterFormTech.addEventListener("submit", (e) => {
     e.preventDefault();
+    const categoria = document
+      .getElementById("filterTech-categoria")
+      .value.trim();
+    const estadoAdopcion = document
+      .getElementById("filterTech-estadoAdopcion")
+      .value.trim();
 
-    const categoria = filterTechCategoria.value.trim();
-    const estadoAdopcion = filterTechEstadoAdopcion.value.trim();
-
-    currentFiltersTech = {
-      categoria: categoria || undefined,
-      estadoAdopcion: estadoAdopcion || undefined,
-    };
-
-    fetchTechnologiesWithFilters(currentFiltersTech);
+    currentFiltersTech = { categoria, nivelAdopcion: estadoAdopcion };
+    fetchItems("technologies", currentFiltersTech);
   });
 
   clearFiltersTechButton.addEventListener("click", () => {
     filterFormTech.reset();
-
     currentFiltersTech = {};
-
-    sectionTitle.textContent = "Technologies";
-
     technologiesLink.click();
   });
 
   async function handleDelete(e) {
-    const startupId = e.target.getAttribute("data-id");
+    const id = e.target.getAttribute("data-id");
+    const type = e.target.getAttribute("data-type");
     const confirmDelete = confirm(
-      "¿Estás seguro de que quieres eliminar esta startup?"
+      `¿Estás seguro de que quieres eliminar este(a) ${type}?`
     );
 
     if (confirmDelete) {
+      const deleteUrl = SERVICES[type].delete;
       try {
-        const response = await fetch(
-          `${DELETE_STARTUP_SERVICE_URL}/${startupId}`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ _id: startupId }),
-          }
+        const response = await fetch(`${deleteUrl}/${id}`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!response.ok) throw new Error(`Error al eliminar el/la ${type}`);
+
+        alert(
+          `${
+            type.charAt(0).toUpperCase() + type.slice(1)
+          } eliminada correctamente.`
         );
-
-        if (!response.ok) {
-          throw new Error("Error al eliminar la startup");
-        }
-
-        const result = await response.json();
-        alert(result.message || "Startup eliminada correctamente.");
-        startupsLink.click();
+        type === "startup" ? startupsLink.click() : technologiesLink.click();
       } catch (error) {
         console.error(error);
-        alert("Hubo un error al eliminar la startup.");
+        alert(`Hubo un error al eliminar el/la ${type}.`);
       }
     }
   }
 
   function handleEdit(e) {
-    const startupId = e.target.getAttribute("data-id");
-    const card = e.target.closest(".card");
+    const id = e.target.getAttribute("data-id");
+    const type = e.target.getAttribute("data-type");
+    if (type === "startup") {
+      openEditStartupModal(id);
+    } else {
+      openEditTechnologyModal(id);
+    }
+  }
+
+  function openEditStartupModal(startupId) {
+    const card = document
+      .querySelector(`button[data-id="${startupId}"]`)
+      .closest(".card");
     const nombre = card.querySelector("h3").textContent;
-    const fechaFundacionText = card.querySelector("p:nth-child(2)").textContent;
     const ubicacion = card
       .querySelector("p:nth-child(3)")
       .textContent.replace("Ubicación: ", "");
@@ -301,10 +242,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const inversionRecibidaText =
       card.querySelector("p:nth-child(5)").textContent;
 
-    const fechaFundacion = fechaFundacionText.replace(
-      "Fecha de Fundación: ",
-      ""
-    );
     const inversionRecibida = inversionRecibidaText.replace(
       "Inversión Recibida: $",
       ""
@@ -322,23 +259,61 @@ document.addEventListener("DOMContentLoaded", () => {
     editModal.style.display = "block";
   }
 
-  const closeButtonElement = document.querySelector(".close-button");
-  closeButtonElement.addEventListener("click", () => {
-    const editModal = document.getElementById("editModal");
-    editModal.style.display = "none";
-    const editForm = document.getElementById("editForm");
-    editForm.reset();
+  function openEditTechnologyModal(techId) {
+    const card = document
+      .querySelector(`button[data-id="${techId}"]`)
+      .closest(".card");
+    const nombre = card.querySelector("h3").textContent;
+    const sector = card
+      .querySelector("p:nth-child(2)")
+      .textContent.replace("Sector: ", "");
+    const descripcion = card
+      .querySelector("p:nth-child(3)")
+      .textContent.replace("Descripción: ", "");
+    const nivelAdopcion = card
+      .querySelector("p:nth-child(4)")
+      .textContent.replace("Estado de Adopción: ", "");
+    const categoria = card
+      .querySelector("p:nth-child(6)")
+      .textContent.replace("Categoría: ", "");
+
+    const techEditForm = document.getElementById("techEditForm");
+    const editTechModal = document.getElementById("editTechModal");
+
+    techEditForm.nombre.value = nombre;
+    techEditForm.sector.value = sector;
+    techEditForm.descripcion.value = descripcion;
+    techEditForm.categoria.value = categoria;
+    techEditForm.nivelAdopcion.value = nivelAdopcion;
+    techEditForm.techId.value = techId;
+
+    editTechModal.style.display = "block";
+  }
+
+  document.querySelector(".close-button").addEventListener("click", () => {
+    document.getElementById("editModal").style.display = "none";
+    document.getElementById("editForm").reset();
   });
 
+  document
+    .querySelector(".close-tech-edit-button")
+    .addEventListener("click", () => {
+      document.getElementById("editTechModal").style.display = "none";
+      document.getElementById("techEditForm").reset();
+    });
+
   window.addEventListener("click", (event) => {
-    const editModal = document.getElementById("editModal");
-    if (event.target == editModal) {
-      editModal.style.display = "none";
-      const editForm = document.getElementById("editForm");
-      editForm.reset();
+    if (event.target == document.getElementById("editModal")) {
+      document.getElementById("editModal").style.display = "none";
+      document.getElementById("editForm").reset();
+    }
+    if (event.target == document.getElementById("editTechModal")) {
+      document.getElementById("editTechModal").style.display = "none";
+      document.getElementById("techEditForm").reset();
     }
   });
 
+  const editForm = document.getElementById("editForm");
   editForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -362,25 +337,16 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     try {
-      const response = await fetch(
-        `${UPDATE_STARTUP_SERVICE_URL}/${startupId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedStartup),
-        }
-      );
+      const response = await fetch(`${SERVICES.startups.update}/${startupId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedStartup),
+      });
 
-      if (!response.ok) {
-        throw new Error("Error al actualizar la startup");
-      }
+      if (!response.ok) throw new Error("Error al actualizar la startup");
 
-      const result = await response.json();
       alert("Startup actualizada correctamente.");
-      const editModal = document.getElementById("editModal");
-      editModal.style.display = "none";
+      document.getElementById("editModal").style.display = "none";
       editForm.reset();
       startupsLink.click();
     } catch (error) {
@@ -389,29 +355,87 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  const createStartupBtn = document.getElementById("create-startup-btn");
-  const createModal = document.getElementById("createModal");
-  const closeButtonCreateElement = document.querySelector(
-    ".close-button-create"
-  );
-  const createForm = document.getElementById("createForm");
+  const techEditForm = document.getElementById("techEditForm");
+  techEditForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  createStartupBtn.addEventListener("click", () => {
-    createModal.style.display = "block";
-  });
+    const techId = techEditForm.techId.value;
+    const nombre = techEditForm.nombre.value.trim();
+    const sector = techEditForm.sector.value.trim();
+    const descripcion = techEditForm.descripcion.value.trim();
+    const categoria = techEditForm.categoria.value.trim();
+    const nivelAdopcion = techEditForm.nivelAdopcion.value.trim();
 
-  closeButtonCreateElement.addEventListener("click", () => {
-    createModal.style.display = "none";
-    createForm.reset();
-  });
+    if (!nombre || !sector || !descripcion || !categoria || !nivelAdopcion) {
+      alert("Por favor, completa todos los campos correctamente.");
+      return;
+    }
 
-  window.addEventListener("click", (event) => {
-    if (event.target == createModal) {
-      createModal.style.display = "none";
-      createForm.reset();
+    const updatedTechnology = {
+      _id: techId,
+      nombre,
+      sector,
+      descripcion,
+      categoria,
+      nivelAdopcion,
+    };
+
+    try {
+      const response = await fetch(
+        `${SERVICES.technologies.update}/${techId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedTechnology),
+        }
+      );
+
+      if (!response.ok) throw new Error("Error al actualizar la technology");
+
+      alert("Technology actualizada correctamente.");
+      document.getElementById("editTechModal").style.display = "none";
+      techEditForm.reset();
+      technologiesLink.click();
+    } catch (error) {
+      console.error(error);
+      alert("Hubo un error al actualizar la technology.");
     }
   });
 
+  createStartupBtn.addEventListener("click", () => {
+    document.getElementById("createModal").style.display = "block";
+  });
+
+  createTechnologyBtn.addEventListener("click", () => {
+    document.getElementById("createTechModal").style.display = "block";
+  });
+
+  document
+    .querySelector(".close-button-create")
+    .addEventListener("click", () => {
+      document.getElementById("createModal").style.display = "none";
+      document.getElementById("createForm").reset();
+    });
+
+  document
+    .querySelector(".close-tech-create-button")
+    .addEventListener("click", () => {
+      document.getElementById("createTechModal").style.display = "none";
+      document.getElementById("techCreateForm").reset();
+    });
+
+  window.addEventListener("click", (event) => {
+    if (event.target == document.getElementById("createModal")) {
+      document.getElementById("createModal").style.display = "none";
+      document.getElementById("createForm").reset();
+    }
+    if (event.target == document.getElementById("createTechModal")) {
+      document.getElementById("createTechModal").style.display = "none";
+      document.getElementById("techCreateForm").reset();
+    }
+  });
+
+  const createForm = document.getElementById("createForm");
   createForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -441,21 +465,16 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     try {
-      const response = await fetch(CREATE_STARTUP_SERVICE_URL, {
+      const response = await fetch(SERVICES.startups.create, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newStartup),
       });
 
-      if (!response.ok) {
-        throw new Error("Error al crear la startup");
-      }
+      if (!response.ok) throw new Error("Error al crear la startup");
 
-      const result = await response.json();
       alert("Startup creada correctamente.");
-      createModal.style.display = "none";
+      document.getElementById("createModal").style.display = "none";
       createForm.reset();
       startupsLink.click();
     } catch (error) {
@@ -464,179 +483,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  async function fetchTechnologiesWithFilters(filters = {}) {
-    sectionTitle.textContent = "Technologies - Filtro Aplicado";
-    cardsContainer.innerHTML = "<p>Cargando...</p>";
-
-    const queryString = buildQueryStringTech(filters);
-    const url = `https://api-gateway-swart.vercel.app/api/technologies/read${queryString}`;
-
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Error al obtener las technologies con filtros");
-      }
-      const data = await response.json();
-      renderTechnologies(data);
-    } catch (error) {
-      console.error(error);
-      cardsContainer.innerHTML =
-        "<p>Error al cargar las technologies con los filtros aplicados.</p>";
-    }
-  }
-
-  async function handleDeleteTech(e) {
-    const techId = e.target.getAttribute("data-id");
-    const confirmDelete = confirm(
-      "¿Estás seguro de que quieres eliminar esta Technology?"
-    );
-
-    if (confirmDelete) {
-      try {
-        const response = await fetch(`${DELETE_TECH_SERVICE_URL}/${techId}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Error al eliminar la Technology");
-        }
-
-        const result = await response.json();
-        alert(result.message || "Technology eliminada correctamente.");
-        fetchTechnologiesWithFilters(currentFiltersTech);
-      } catch (error) {
-        console.error(error);
-        alert("Hubo un error al eliminar la Technology.");
-      }
-    }
-  }
-
-  function handleEditTech(e) {
-    const techId = e.target.getAttribute("data-id");
-    const card = e.target.closest(".card");
-    const nombre = card.querySelector("h3").textContent;
-    const sector = card
-      .querySelector("p:nth-child(2)")
-      .textContent.replace("Sector: ", "");
-    const descripcion = card
-      .querySelector("p:nth-child(3)")
-      .textContent.replace("Descripción: ", "");
-    const estadoAdopcion = card
-      .querySelector("p:nth-child(4)")
-      .textContent.replace("Estado de Adopción: ", "");
-    const fechaIntroduccion = card
-      .querySelector("p:nth-child(5)")
-      .textContent.replace("Fecha de Introducción: ", "");
-    const categoria = card
-      .querySelector("p:nth-child(6)")
-      .textContent.replace("Categoría: ", "");
-
-    const techEditForm = document.getElementById("techEditForm");
-    const editTechModal = document.getElementById("editTechModal");
-
-    techEditForm["tech-nombre"].value = nombre;
-    techEditForm["tech-sector"].value = sector;
-    techEditForm["tech-descripcion"].value = descripcion;
-    techEditForm["tech-categoria"].value = categoria;
-    techEditForm["tech-nivelAdopcion"].value = estadoAdopcion;
-    techEditForm["techId"].value = techId;
-
-    editTechModal.style.display = "block";
-  }
-
-  const closeTechEditButton = document.querySelector(".close-tech-edit-button");
-  closeTechEditButton.addEventListener("click", () => {
-    const editTechModal = document.getElementById("editTechModal");
-    editTechModal.style.display = "none";
-    const techEditForm = document.getElementById("techEditForm");
-    techEditForm.reset();
-  });
-
-  window.addEventListener("click", (event) => {
-    const editTechModal = document.getElementById("editTechModal");
-    if (event.target == editTechModal) {
-      editTechModal.style.display = "none";
-      const techEditForm = document.getElementById("techEditForm");
-      techEditForm.reset();
-    }
-  });
-
-  techEditForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const techId = techEditForm.techId.value;
-    const nombre = techEditForm.nombre.value.trim();
-    const sector = techEditForm.sector.value.trim();
-    const descripcion = techEditForm.descripcion.value.trim();
-    const categoria = techEditForm.categoria.value.trim();
-    const nivelAdopcion = techEditForm.nivelAdopcion.value.trim();
-
-    if (!nombre || !sector || !descripcion || !categoria || !nivelAdopcion) {
-      alert("Por favor, completa todos los campos correctamente.");
-      return;
-    }
-
-    const updatedTech = {
-      _id: techId,
-      nombre,
-      sector,
-      descripcion,
-      categoria,
-      nivelAdopcion,
-    };
-
-    try {
-      const response = await fetch(`${UPDATE_TECH_SERVICE_URL}/${techId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedTech),
-      });
-
-      if (!response.ok) {
-        throw new Error("Error al actualizar la Technology");
-      }
-
-      const result = await response.json();
-      alert("Technology actualizada correctamente.");
-      // Cerrar el modal y recargar las technologies
-      const editTechModal = document.getElementById("editTechModal");
-      editTechModal.style.display = "none";
-      techEditForm.reset();
-      technologiesLink.click();
-    } catch (error) {
-      console.error(error);
-      alert("Hubo un error al actualizar la Technology.");
-    }
-  });
-
-  const createTechnologyBtn = document.getElementById("create-technology-btn");
-  const createTechModal = document.getElementById("createTechModal");
-  const closeTechCreateButton = document.querySelector(
-    ".close-tech-create-button"
-  );
   const techCreateForm = document.getElementById("techCreateForm");
-
-  createTechnologyBtn.addEventListener("click", () => {
-    createTechModal.style.display = "block";
-  });
-
-  closeTechCreateButton.addEventListener("click", () => {
-    createTechModal.style.display = "none";
-    techCreateForm.reset();
-  });
-
-  window.addEventListener("click", (event) => {
-    if (event.target == createTechModal) {
-      createTechModal.style.display = "none";
-      techCreateForm.reset();
-    }
-  });
-
   techCreateForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -645,7 +492,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const descripcion = techCreateForm.descripcion.value.trim();
     const categoria = techCreateForm.categoria.value.trim();
     const nivelAdopcion = techCreateForm.nivelAdopcion.value.trim();
-    const fechaIntroduccion = techCreateForm.fechaIntroduccion.value.trim();
+    const fechaIntroduccion = techCreateForm.fechaIntroduccion.value;
 
     if (
       !nombre ||
@@ -659,7 +506,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const newTech = {
+    const newTechnology = {
       nombre,
       sector,
       descripcion,
@@ -669,26 +516,26 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     try {
-      const response = await fetch(CREATE_TECH_SERVICE_URL, {
+      const response = await fetch(SERVICES.technologies.create, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newTech),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newTechnology),
       });
 
-      if (!response.ok) {
-        throw new Error("Error al crear la Technology");
-      }
+      if (!response.ok) throw new Error("Error al crear la technology");
 
-      const result = await response.json();
       alert("Technology creada correctamente.");
-      createTechModal.style.display = "none";
+      document.getElementById("createTechModal").style.display = "none";
       techCreateForm.reset();
       technologiesLink.click();
     } catch (error) {
       console.error(error);
-      alert("Hubo un error al crear la Technology.");
+      alert("Hubo un error al crear la technology.");
     }
   });
+
+  filterForm.style.display = "none";
+  filterFormTech.style.display = "none";
+  createStartupBtn.style.display = "none";
+  createTechnologyBtn.style.display = "none";
 });

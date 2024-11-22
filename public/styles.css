@@ -218,8 +218,7 @@ body {
 #create-technology-btn {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 40px;
+  gap: 5px;
 }
 #create-startup-btn {
   display: flex;

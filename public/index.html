@@ -14,20 +14,21 @@
       </ul>
       <p>Se ha optimizado la carga de peticiones</p>
       <p>
-        Importante: Podria la primer peticion obtener un error, simplemente se
-        tiene que repetir y funcionara perfectamente, en caso de que ocurra en
-        crear o editar solo dar al boton Crear Startup o Guardar Cambios
-        nuevamente y funcionara
+        IMPORTANTE: Podría la primera petición obtener un error, simplemente se
+        tiene que repetir y funcionará perfectamente. En caso de que ocurra en
+        crear o editar, solo da al botón Crear Startup o Guardar Cambios
+        nuevamente y funcionará correctamente.
       </p>
     </div>
 
     <div class="main-content">
-      <h1 id="section-title">Bienvenido al Dashboard</h1>
+      <h1 id="section-title">
+        Bienvenido al Dashboard de Startups y Technologies
+      </h1>
 
       <!-- Formulario de Filtros para Startups -->
-      <form id="filterForm">
-        <h3>Filtros de Búsqueda</h3>
-
+      <form id="filterForm" style="display: none">
+        <h3>Filtros de Búsqueda - Startups</h3>
         <label for="filter-nombre">Nombre:</label>
         <input
           type="text"
@@ -59,9 +60,9 @@
         <button type="button" id="clearFilters">Limpiar Filtros</button>
       </form>
 
+      <!-- Formulario de Filtros para Technologies -->
       <form id="filterFormTech" style="display: none">
         <h3>Filtros de Búsqueda - Technologies</h3>
-
         <label for="filterTech-categoria">Categoría:</label>
         <input
           type="text"
@@ -85,8 +86,14 @@
       </form>
 
       <!-- Botones Crear Startups y Technologies -->
-      <button id="create-startup-btn" class="create-btn">Crear Startup</button>
-      <button id="create-technology-btn" class="create-btn">
+      <button id="create-startup-btn" class="create-btn" style="display: none">
+        Crear Startup
+      </button>
+      <button
+        id="create-technology-btn"
+        class="create-btn"
+        style="display: none"
+      >
         Crear Technology
       </button>
 
@@ -233,9 +240,9 @@
             <option value="baja">Baja</option>
           </select>
 
-          <label for="tech-create-fechaIntroduccion"
-            >Fecha de Introducción:</label
-          >
+          <label for="tech-create-fechaIntroduccion">
+            Fecha de Introducción:
+          </label>
           <input
             type="date"
             id="tech-create-fechaIntroduccion"
