@@ -471,7 +471,10 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify(newStartup),
       });
 
-      if (!response.ok) throw new Error("Error al crear la startup");
+      if (!response.ok)
+        throw new Error(
+          "Error al crear la startup o el nombre es un duplicado"
+        );
 
       alert("Startup creada correctamente.");
       document.getElementById("createModal").style.display = "none";
@@ -479,7 +482,7 @@ document.addEventListener("DOMContentLoaded", () => {
       startupsLink.click();
     } catch (error) {
       console.error(error);
-      alert("Hubo un error al crear la startup.");
+      alert("Hubo un error al crear la startup o el nombre esta duplicado.");
     }
   });
 
@@ -522,7 +525,10 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify(newTechnology),
       });
 
-      if (!response.ok) throw new Error("Error al crear la technology");
+      if (!response.ok)
+        throw new Error(
+          "Error al crear la technology o es un nombre duplicado"
+        );
 
       alert("Technology creada correctamente.");
       document.getElementById("createTechModal").style.display = "none";
@@ -530,7 +536,9 @@ document.addEventListener("DOMContentLoaded", () => {
       technologiesLink.click();
     } catch (error) {
       console.error(error);
-      alert("Hubo un error al crear la technology.");
+      alert(
+        "Hubo un error al crear la technology o el nombre puede ser un duplicado."
+      );
     }
   });
 
