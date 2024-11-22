@@ -62,10 +62,10 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="buttons">
             <button class="edit-btn" data-id="${
               item._id
-            }" data-type="startup">Editar</button>
+            }" data-type="startups">Editar</button>
             <button class="delete-btn" data-id="${
               item._id
-            }" data-type="startup">Eliminar</button>
+            }" data-type="startups">Eliminar</button>
           </div>
         `;
       } else if (type === "technologies") {
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <h3>${item.nombre}</h3>
           <p><strong>Sector:</strong> ${item.sector}</p>
           <p><strong>Descripción:</strong> ${item.descripcion}</p>
-          <p><strong>Estado de Adopción:</strong> ${item.nivelAdopcion}</p>
+          <p><strong>Estado de Adopción:</strong> ${item.estadoAdopcion}</p>
           <p><strong>Fecha de Introducción:</strong> ${formatDate(
             item.fechaIntroduccion
           )}</p>
@@ -81,10 +81,10 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="buttons">
             <button class="edit-btn" data-id="${
               item._id
-            }" data-type="technology">Editar</button>
+            }" data-type="technologies">Editar</button>
             <button class="delete-btn" data-id="${
               item._id
-            }" data-type="technology">Eliminar</button>
+            }" data-type="technologies">Eliminar</button>
           </div>
         `;
       }
@@ -178,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .getElementById("filterTech-estadoAdopcion")
       .value.trim();
 
-    currentFiltersTech = { categoria, nivelAdopcion: estadoAdopcion };
+    currentFiltersTech = { categoria, estadoAdopcion };
     fetchItems("technologies", currentFiltersTech);
   });
 
